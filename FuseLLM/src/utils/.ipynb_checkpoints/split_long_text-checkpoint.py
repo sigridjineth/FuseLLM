@@ -103,9 +103,9 @@ if __name__ == '__main__':
     def split_text(examples):
         split_texts_batch = []
         for text in examples["text"]:
-            base_tokenized_text = base_tokenizer(text, add_special_tokens=False, max_length=threshold, truncation=True)["input_ids"]
-            blending_tokenized_text = blending_tokenizer(text, add_special_tokens=False, max_length=threshold, truncation=True)["input_ids"]
-            another_blending_tokenized_text = another_blending_tokenizer(text, add_special_tokens=False, max_length=threshold, truncation=True)["input_ids"]
+            base_tokenized_text = base_tokenizer(text, add_special_tokens=False)["input_ids"]
+            blending_tokenized_text = blending_tokenizer(text, add_special_tokens=False)["input_ids"]
+            another_blending_tokenized_text = another_blending_tokenizer(text, add_special_tokens=False)["input_ids"]
             if len(base_tokenized_text) > threshold or len(blending_tokenized_text) > threshold or \
                     len(another_blending_tokenized_text) > threshold:
                 max_length = max(len(base_tokenized_text), len(blending_tokenized_text),
