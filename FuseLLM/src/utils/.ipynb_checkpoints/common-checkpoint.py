@@ -1,14 +1,16 @@
 """Prepare args, tokenizer, model."""
 import argparse
 import transformers
-from others import (
+# replace .others to others except for deepspeed
+from .others import (
     get_logger,
     get_tokenizer,
     get_accelerate_model,
     get_base_model,
     get_last_checkpoint_for_lora,
 )
-from config import (
+# replace .config to others except for deepspeed
+from .config import (
     ModelArguments,
     DataArguments,
     TrainingArguments,

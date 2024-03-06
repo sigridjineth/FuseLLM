@@ -8,7 +8,8 @@ from transformers import Seq2SeqTrainingArguments
 from transformers.tokenization_utils_base import PreTrainedTokenizerBase
 from transformers.utils import PaddingStrategy
 from dataclasses import dataclass
-from others import get_logger
+# replace .others to others except for deepspeed
+from .others import get_logger
 
 logger = get_logger(__name__)
 

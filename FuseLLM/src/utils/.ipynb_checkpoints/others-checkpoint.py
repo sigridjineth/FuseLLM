@@ -30,7 +30,9 @@ logger = get_logger(__name__)
 
 IGNORE_TOKEN_ID = LabelSmoother.ignore_index
 TOKENIZER_TO_SPECIAL_TOKEN = {transformers.LlamaTokenizer: '▁',
-                              transformers.GPTNeoXTokenizerFast: 'Ġ'}
+                              transformers.GPTNeoXTokenizerFast: 'Ġ',
+                            transformers.PreTrainedTokenizerFast: '[UNK]'
+                             }
 
 
 # get tokenizer
