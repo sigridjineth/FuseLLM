@@ -1,5 +1,8 @@
 """1. Split long text in the dataset."""
 
+import sys
+sys.path.append("/workspace/FuseLLM/FuseLLM")
+
 from datasets import Features, load_dataset, load_from_disk, Dataset, DatasetDict
 import argparse
 
@@ -103,13 +106,12 @@ if __name__ == '__main__':
     def split_text(examples):
         split_texts_batch = []
         for text in examples["text"]:
-            base_tokenized_text = base_tokenizer(text, add_special_tokens=False)["input_ids"]
-            blending_tokenized_text = blending_tokenizer(text, add_special_tokens=False)["input_ids"]
-            another_blending_tokenized_text = another_blending_tokenizer(text, add_special_tokens=False)["input_ids"]
-            if len(base_tokenized_text) > threshold or len(blending_tokenized_text) > threshold or \
-                    len(another_blending_tokenized_text) > threshold:
-                max_length = max(len(base_tokenized_text), len(blending_tokenized_text),
-                                 len(another_blending_tokenized_text))
+            base_tokenized_text = base_tokenizer(text, add_special_tokens=False, truncation=True, max_length=threshold)["input_ids"]
+            blending_tokenized_text = blending_tokenizer(text, add_special_tokens=False, truncation=True, max_length=threshold)["input_ids"]
+            another_blending_tokenized_text = another_blending_tokenizer(text, add_special_tokens=False, truncation=True, max_length=threshold)["input_ids"]
+            
+            max_length = max(len(base_tokenized_text), len(blending_tokenized_text), len(another_blending_tokenized_text))
+            if max_length > threshold:
                 if len(base_tokenized_text) == max_length:
                     max_tokenized_text = base_tokenized_text
                     max_tokenizer = base_tokenizer
@@ -119,11 +121,16 @@ if __name__ == '__main__':
                 else:
                     max_tokenized_text = another_blending_tokenized_text
                     max_tokenizer = another_blending_tokenizer
-                truncated_sequences = truncate_sequences(max_tokenized_text, max_length=threshold)
-                split_texts = [max_tokenizer.decode(seq, skip_special_tokens=True) for seq in truncated_sequences]
+                
+                split_texts = []
+                for i in range(0, len(max_tokenized_text), threshold):
+                    chunk = max_tokenized_text[i:i+threshold]
+                    split_texts.append(max_tokenizer.decode(chunk, skip_special_tokens=True))
+                
                 split_texts_batch.append(split_texts)
             else:
                 split_texts_batch.append([text])
+        
         return {"text": split_texts_batch}
 
 

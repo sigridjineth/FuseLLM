@@ -3,8 +3,12 @@
 from typing import List, Dict
 from datasets import Features, load_dataset, load_from_disk, DatasetDict
 import argparse
-import torch
-import torch.nn.functional as F
+# import torch
+# import torch.nn.functional as F
+
+import os
+import sys
+sys.path.append("/workspace/FuseLLM/FuseLLM")
 
 from src.utils.others import (
     get_logger,
@@ -119,6 +123,8 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+import torch
+import torch.nn.functional as F
 
 if __name__ == '__main__':
     args = parse_args()

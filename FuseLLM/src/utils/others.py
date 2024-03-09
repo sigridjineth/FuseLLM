@@ -26,11 +26,17 @@ logging.basicConfig(
 
 
 logger = get_logger(__name__)
+sys.path.append('/workspace/Orion-14B-Base')
+
+from tokenization_orion import OrionTokenizer
 
 
 IGNORE_TOKEN_ID = LabelSmoother.ignore_index
-TOKENIZER_TO_SPECIAL_TOKEN = {transformers.LlamaTokenizer: '▁',
-                              transformers.GPTNeoXTokenizerFast: 'Ġ'}
+TOKENIZER_TO_SPECIAL_TOKEN = {
+    transformers.LlamaTokenizer: '▁',
+    transformers.GPTNeoXTokenizerFast: 'Ġ',
+    OrionTokenizer: '<s>'
+}
 
 
 # get tokenizer
@@ -45,7 +51,9 @@ def get_tokenizer(model_name_or_path, cache_dir, model_max_length):
         kwargs["tokenizer_trust_remote_code"] = True
         kwargs["model_trust_remote_code"] = True
     else:
-        raise NotImplementedError
+        kwargs["use_fast"] = True
+        kwargs["tokenizer_trust_remote_code"] = True
+        kwargs["model_trust_remote_code"] = True
     logger.info("Loading tokenizer.")
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         model_name_or_path,
